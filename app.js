@@ -17,6 +17,42 @@ var resourceList = [
         image: "http://websnacks.net/wp-content/uploads/2015/05/Git.png",
         type: "Course",
         author: "Kevin Skoglund"
+    },
+    {
+        name: "Eloquent JavaScript",
+        image: "http://eloquentjavascript.net/img/cover.png",
+        type: "Book",
+        author: "Marijn Haverbeke"
+    },
+    {
+        name: "You Don't Know JS",
+        image: "https://images-na.ssl-images-amazon.com/images/G/01/aplusautomation/vendorimages/e951f3b0-aea8-4bb2-9a14-0fb220ac5bc2.png._CB325458148_.png",
+        type: "Book",
+        author: "Kyle Simpson"
+    },
+    {
+        name: "Git Essential Training",
+        image: "http://websnacks.net/wp-content/uploads/2015/05/Git.png",
+        type: "Course",
+        author: "Kevin Skoglund"
+    },
+    {
+        name: "You Don't Know JS",
+        image: "https://images-na.ssl-images-amazon.com/images/G/01/aplusautomation/vendorimages/e951f3b0-aea8-4bb2-9a14-0fb220ac5bc2.png._CB325458148_.png",
+        type: "Book",
+        author: "Kyle Simpson"
+    },
+    {
+        name: "Web Developer Bootcamp",
+        image: "https://udemy-images.udemy.com/course/750x422/625204_436a_2.jpg",
+        type: "Course",
+        author: "Colt Steele"
+    },
+    {
+        name: "Git Essential Training",
+        image: "http://websnacks.net/wp-content/uploads/2015/05/Git.png",
+        type: "Course",
+        author: "Kevin Skoglund"
     }
 ];
 
