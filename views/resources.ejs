@@ -1,0 +1,12 @@
+<% include partials/header %>
+<h1>AssessR</h1>
+<p>Learning Web Development is easier with the right resources</p>
+<p><a href="/new">Add New Resource</a></p>
+<% resources.forEach((resource) => { %>
+<div>
+    <h3><%= resource.name %></h3>
+    <img src="<%= resource.image %>">
+</div>
+    
+<% }); %>
+<% include partials/footer %>
