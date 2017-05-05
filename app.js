@@ -61,17 +61,28 @@ var resourceList = [
 //import npm modules
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
 //middleware
 app.set("view engine", "ejs");
 //serve static files
 app.use(express.static(__dirname + "/public"));
-
+app.use(bodyParser.urlencoded({extended: true}));
 //set up the routes
 app.get("/", (req, res) =>{
     res.render("index");
 });
 app.get("/resources", (req, res)=>{
     res.render("resources", {resources: resourceList});
+});
+app.post("/resources", (req, res) => {
+    var newResource = {
+        name: req.body.name,
+        image: req.body.image,
+        type: req.body.type,
+        author: req.body.author
+    }
+    resourceList.push(newResource);
+    res.redirect("/resources");
 });
 app.get("/new",(req, res) =>{
     res.render("new");
