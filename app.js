@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({
 app.get("/", (req, res) => {
     res.render("index");
 });
+
 app.get("/resources", (req, res) => {
     var resources = Resource.find({}, (err, data) => {
         if (err) {
@@ -50,5 +51,16 @@ app.post("/resources", (req, res) => {
 });
 app.get("/new", (req, res) => {
     res.render("new");
+});
+// SHOW - shows more info about one resource
+app.get("/resources/:id", (req, res) =>{
+    Resource.findById(req.params.id, (err, resource) =>{
+        if(err){
+            console.log(err);
+        } else {
+            
+            res.render("show", {resource});
+        }
+    });
 });
 app.listen(3000 || process.env.PORT, () => console.log("AssessR is up and running"));
