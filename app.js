@@ -3,10 +3,13 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
+const seedDB = require('./data');
 //import models
 const Resource = require("./models/resource");
+
 //connect to the database
 mongoose.connect('mongodb://localhost:27017/assessr');
+// seedDB();
 //middleware
 app.set("view engine", "ejs");
 //serve static files
@@ -54,13 +57,14 @@ app.get("/new", (req, res) => {
 });
 // SHOW - shows more info about one resource
 app.get("/resources/:id", (req, res) =>{
-    Resource.findById(req.params.id, (err, resource) =>{
+    Resource.findById(req.params.id).populate("comments").exec((err, resource) =>{
         if(err){
             console.log(err);
-        } else {
-            
+        } else { 
+            console.log(resource);      
             res.render("show", {resource});
         }
     });
 });
+
 app.listen(3000 || process.env.PORT, () => console.log("AssessR is up and running"));

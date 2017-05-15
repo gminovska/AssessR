@@ -4,4 +4,9 @@
 <img src="<%= resource.image %>">
 
 <p><%= resource.description %></p>
+<% resource.comments.forEach(function(comment){ %>
+    <p>
+        <strong><%= comment.author %></strong> - <%= comment.text %>
+    </p>
+<% }) %>
 <% include partials/footer %>
