@@ -6,14 +6,14 @@ const mongoose = require('mongoose');
 const seedDB = require('./data');
 //import models
 const Resource = require("./models/resource");
-
+const Comment = require("./models/comment");
 //connect to the database
 mongoose.connect('mongodb://localhost:27017/assessr');
 // seedDB();
 //middleware
 app.set("view engine", "ejs");
 //serve static files
-app.use(express.static("public"));
+app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -60,11 +60,44 @@ app.get("/resources/:id", (req, res) =>{
     Resource.findById(req.params.id).populate("comments").exec((err, resource) =>{
         if(err){
             console.log(err);
-        } else { 
-            console.log(resource);      
+        } else {       
             res.render("show", {resource});
         }
     });
 });
+//=====================
+//  COMMENTS ROUTES
+//=====================
+app.get('/resources/:id/comments/new', (req, res)=>{
+    Resource.findById(req.params.id, (err, data)=>{
+        if(err){
+            console.log(err);
+        }else {
+            res.render('comments/new', {resource:data});
+        }
+    });
 
+app.post('/resources/:id/comments', (req, res)=>{
+    
+    // lookup resource by ID
+    Resource.findById(req.params.id, (err, resource)=>{
+        if(err){
+            console.log(err);
+        }else{
+            //create a new comment
+            Comment.create(req.body.comment, (err, comment)=>{
+                if(err){
+                    console.log(err);
+                } else{
+                    //associate the comment with the resource
+                    resource.comments.push(comment);
+                    resource.save();
+                    res.redirect("/resources/" + resource._id);
+                }
+            });       
+        }
+    });   
+});
+    
+});
 app.listen(3000 || process.env.PORT, () => console.log("AssessR is up and running"));
