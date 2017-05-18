@@ -92,6 +92,9 @@ app.get('/resources/:id/comments/new', (req, res)=>{
         }
     });
 
+
+    
+});
 app.post('/resources/:id/comments', (req, res)=>{
     
     // lookup resource by ID
@@ -113,6 +116,25 @@ app.post('/resources/:id/comments', (req, res)=>{
         }
     });   
 });
-    
+
+//====================
+//  AUTH ROUTES
+//====================
+//show sign up form
+app.get('/register',(req, res)=>{
+    res.render('register');
+});
+//handle sign up logic
+app.post('/register', function(req, res) {
+    var newUser = new User({username: req.body.username}); 
+    User.register(newUser, req.body.password, (err,user)=>{
+        if(err){
+            console.log(err);
+            return res.render('register');
+        }
+        passport.authenticate('local')(req, res, ()=>{
+            res.redirect('/resources');
+        });
+    });
 });
 app.listen(3000 || process.env.PORT, () => console.log("AssessR is up and running"));
