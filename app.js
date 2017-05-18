@@ -3,10 +3,13 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
-const seedDB = require('./data');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+// const seedDB = require('./data');
 //import models
 const Resource = require("./models/resource");
 const Comment = require("./models/comment");
+const User = require('./models/user');
 //connect to the database
 mongoose.connect('mongodb://localhost:27017/assessr');
 // seedDB();
@@ -17,6 +20,18 @@ app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+
+// PASSPORT CONFIGURATION
+app.use(require('express-session')({
+    secret: "The earth is flat",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 //set up the routes 
 app.get("/", (req, res) => {
     res.render("index");
