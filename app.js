@@ -85,7 +85,7 @@ app.get("/resources/:id", (req, res) => {
 //=====================
 //  COMMENTS ROUTES
 //=====================
-app.get('/resources/:id/comments/new', (req, res) => {
+app.get('/resources/:id/comments/new', isLoggedIn, (req, res) => {
     Resource.findById(req.params.id, (err, data) => {
         if (err) {
             console.log(err);
@@ -95,11 +95,8 @@ app.get('/resources/:id/comments/new', (req, res) => {
             });
         }
     });
-
-
-
 });
-app.post('/resources/:id/comments', (req, res) => {
+app.post('/resources/:id/comments', isLoggedIn, (req, res) => {
 
     // lookup resource by ID
     Resource.findById(req.params.id, (err, resource) => {
@@ -160,3 +157,11 @@ app.get('/logout', function(req, res) {
     res.redirect('/resources');
 });
 app.listen(3000 || process.env.PORT, () => console.log("AssessR is up and running"));
+
+//my middleware functions
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    } 
+    res.redirect('/login');
+}
