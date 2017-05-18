@@ -71,70 +71,87 @@ app.get("/new", (req, res) => {
     res.render("new");
 });
 // SHOW - shows more info about one resource
-app.get("/resources/:id", (req, res) =>{
-    Resource.findById(req.params.id).populate("comments").exec((err, resource) =>{
-        if(err){
+app.get("/resources/:id", (req, res) => {
+    Resource.findById(req.params.id).populate("comments").exec((err, resource) => {
+        if (err) {
             console.log(err);
-        } else {       
-            res.render("show", {resource});
+        } else {
+            res.render("show", {
+                resource
+            });
         }
     });
 });
 //=====================
 //  COMMENTS ROUTES
 //=====================
-app.get('/resources/:id/comments/new', (req, res)=>{
-    Resource.findById(req.params.id, (err, data)=>{
-        if(err){
+app.get('/resources/:id/comments/new', (req, res) => {
+    Resource.findById(req.params.id, (err, data) => {
+        if (err) {
             console.log(err);
-        }else {
-            res.render('comments/new', {resource:data});
+        } else {
+            res.render('comments/new', {
+                resource: data
+            });
         }
     });
 
 
-    
+
 });
-app.post('/resources/:id/comments', (req, res)=>{
-    
+app.post('/resources/:id/comments', (req, res) => {
+
     // lookup resource by ID
-    Resource.findById(req.params.id, (err, resource)=>{
-        if(err){
+    Resource.findById(req.params.id, (err, resource) => {
+        if (err) {
             console.log(err);
-        }else{
+        } else {
             //create a new comment
-            Comment.create(req.body.comment, (err, comment)=>{
-                if(err){
+            Comment.create(req.body.comment, (err, comment) => {
+                if (err) {
                     console.log(err);
-                } else{
+                } else {
                     //associate the comment with the resource
                     resource.comments.push(comment);
                     resource.save();
                     res.redirect("/resources/" + resource._id);
                 }
-            });       
+            });
         }
-    });   
+    });
 });
 
 //====================
 //  AUTH ROUTES
 //====================
 //show sign up form
-app.get('/register',(req, res)=>{
+app.get('/register', (req, res) => {
     res.render('register');
 });
 //handle sign up logic
-app.post('/register', function(req, res) {
-    var newUser = new User({username: req.body.username}); 
-    User.register(newUser, req.body.password, (err,user)=>{
-        if(err){
+app.post('/register', function (req, res) {
+    var newUser = new User({
+        username: req.body.username
+    });
+    User.register(newUser, req.body.password, (err, user) => {
+        if (err) {
             console.log(err);
             return res.render('register');
         }
-        passport.authenticate('local')(req, res, ()=>{
+        passport.authenticate('local')(req, res, () => {
             res.redirect('/resources');
         });
     });
 });
+
+//show login form
+app.get('/login', function (req, res) {
+    res.render('login');
+});
+//handle login logic
+app.post('/login', passport.authenticate('local', {
+    successRedirect: '/resources',
+    failureRedirect: '/login'
+}), function (req, res) {});
+
 app.listen(3000 || process.env.PORT, () => console.log("AssessR is up and running"));
