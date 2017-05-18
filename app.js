@@ -154,4 +154,9 @@ app.post('/login', passport.authenticate('local', {
     failureRedirect: '/login'
 }), function (req, res) {});
 
+//logout route
+app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/resources');
+});
 app.listen(3000 || process.env.PORT, () => console.log("AssessR is up and running"));
