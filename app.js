@@ -10,6 +10,11 @@ const LocalStrategy = require('passport-local');
 const Resource = require("./models/resource");
 const Comment = require("./models/comment");
 const User = require('./models/user');
+//import routes
+const resourceRoutes = require('./routes/resources');
+const commentRoutes = require('./routes/comments');
+const indexRoutes = require('./routes/index');
+
 //connect to the database
 mongoose.connect('mongodb://localhost:27017/assessr');
 // seedDB();
@@ -37,136 +42,10 @@ app.use(function(req, res, next){
     next();
 });
 
-//set up the routes 
-app.get("/", (req, res) => {
-    res.render("index");
-});
+app.use(indexRoutes);
+app.use('/resources', resourceRoutes);
+app.use('/resources/:id/comments', commentRoutes);
 
-app.get("/resources", (req, res) => {
-    var resources = Resource.find({}, (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render("resources", {
-                resources: data
-            });
-        }
-    });
 
-});
-app.post("/resources", (req, res) => {
-    var newResource = {
-        name: req.body.name,
-        image: req.body.image,
-        type: req.body.type,
-        author: req.body.author,
-        description: req.body.description
-    };
-    Resource.create(newResource, (err, data) => {
-        if (err) {
-            console.log("there was an error :(");
-        } else {
-            console.log("Resource added: ");
-            console.log(data);
-        }
-    });
-    res.redirect("/resources");
-});
-app.get("/new", (req, res) => {
-    res.render("new");
-});
-// SHOW - shows more info about one resource
-app.get("/resources/:id", (req, res) => {
-    Resource.findById(req.params.id).populate("comments").exec((err, resource) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render("show", {
-                resource
-            });
-        }
-    });
-});
-//=====================
-//  COMMENTS ROUTES
-//=====================
-app.get('/resources/:id/comments/new', isLoggedIn, (req, res) => {
-    Resource.findById(req.params.id, (err, data) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render('comments/new', {
-                resource: data
-            });
-        }
-    });
-});
-app.post('/resources/:id/comments', isLoggedIn, (req, res) => {
-
-    // lookup resource by ID
-    Resource.findById(req.params.id, (err, resource) => {
-        if (err) {
-            console.log(err);
-        } else {
-            //create a new comment
-            Comment.create(req.body.comment, (err, comment) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    //associate the comment with the resource
-                    resource.comments.push(comment);
-                    resource.save();
-                    res.redirect("/resources/" + resource._id);
-                }
-            });
-        }
-    });
-});
-
-//====================
-//  AUTH ROUTES
-//====================
-//show sign up form
-app.get('/register', (req, res) => {
-    res.render('register');
-});
-//handle sign up logic
-app.post('/register', function (req, res) {
-    var newUser = new User({
-        username: req.body.username
-    });
-    User.register(newUser, req.body.password, (err, user) => {
-        if (err) {
-            console.log(err);
-            return res.render('register');
-        }
-        passport.authenticate('local')(req, res, () => {
-            res.redirect('/resources');
-        });
-    });
-});
-
-//show login form
-app.get('/login', function (req, res) {
-    res.render('login');
-});
-//handle login logic
-app.post('/login', passport.authenticate('local', {
-    successRedirect: '/resources',
-    failureRedirect: '/login'
-}), function (req, res) {});
-
-//logout route
-app.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/resources');
-});
 app.listen(3000 || process.env.PORT, () => console.log("AssessR is up and running"));
 
-//my middleware functions
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    } 
-    res.redirect('/login');
-}
