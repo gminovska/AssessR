@@ -43,6 +43,7 @@ router.get("/:id", (req, res) => {
         if (err) {
             console.log(err);
         } else {
+            console.log(resource);
             res.render("show", {
                 resource
             });

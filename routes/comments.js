@@ -24,7 +24,14 @@ router.post('/', isLoggedIn, (req, res) => {
             console.log(err);
         } else {
             //create a new comment
-            Comment.create(req.body.comment, (err, comment) => {
+            var newComment = {
+                text: req.body.comment,
+                author: {
+                    id: req.user._id,
+                    username: req.user.username
+                }
+            };
+            Comment.create(newComment, (err, comment) => {
                 if (err) {
                     console.log(err);
                 } else {
