@@ -14,10 +14,13 @@ var resourceSchema = new mongoose.Schema({
         username: String
     },
     comments: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment"
-        }
-    ]
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment"
+    }],
+    dateAdded: {
+        type: Date,
+        default: Date.now    
+    }
 })
 
 module.exports = mongoose.model("Resource", resourceSchema);

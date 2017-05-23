@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const dateFormat = require('dateformat');
 const Resource = require("../models/resource");
 const Comment = require("../models/comment");
 
@@ -27,12 +28,12 @@ router.post("/",isLoggedIn, (req, res) => {
                 username: req.user.username
         },
     };
-    Resource.create(newResource, (err, data) => {
+    Resource.create(newResource, (err, resource) => {
         if (err) {
             console.log("there was an error :(");
         } else {
             console.log("Resource added: ");
-            console.log(data);
+            console.log(resource);
         }
     });
     res.redirect("/resources");
@@ -47,9 +48,14 @@ router.get("/:id", (req, res) => {
         if (err) {
             console.log(err);
         } else {
-            console.log(resource);
             res.render("show", {
-                resource
+                id: resource._id,
+                name: resource.name,
+                image: resource.image,
+                description: resource.description,
+                addedBy: resource.addedBy.username,
+                date: dateFormat(resource.dateAdded, 'mmmm/dd/yyyy'),
+                comments: resource.comments
             });
         }
     });
