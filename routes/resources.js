@@ -21,7 +21,11 @@ router.post("/",isLoggedIn, (req, res) => {
         image: req.body.image,
         type: req.body.type,
         author: req.body.author,
-        description: req.body.description
+        description: req.body.description,
+        addedBy: {
+                id: req.user._id,
+                username: req.user.username
+        },
     };
     Resource.create(newResource, (err, data) => {
         if (err) {

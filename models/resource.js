@@ -6,8 +6,14 @@ var resourceSchema = new mongoose.Schema({
     type: String,
     author: String,
     description: String,
-    comments: [
-        {
+    addedBy: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
+        username: String
+    },
+    comments: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "Comment"
         }
