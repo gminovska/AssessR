@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const methodOverride = require('method-override');
 // const seedDB = require('./data');
 //import models
 const Resource = require("./models/resource");
@@ -22,6 +23,7 @@ mongoose.connect('mongodb://localhost:27017/assessr');
 app.set("view engine", "ejs");
 //serve static files
 app.use(express.static(__dirname + "/public"));
+app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
