@@ -85,6 +85,17 @@ router.put('/:id', (req, res) => {
             }
         });
 });
+//DELETE RESOURCE ROUTE
+router.delete('/:id', (req, res) =>{
+    Resource.findByIdAndRemove(req.params.id, (err, result) =>{
+        if(err) {
+            res.redirect('/resources');
+        } else {
+            res.redirect('/resources');
+        }
+    });
+});
+
 //my middleware functions
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
