@@ -16,7 +16,7 @@ router.get("/", (req, res) => {
     });
 
 });
-router.post("/",isLoggedIn, (req, res) => {
+router.post("/", isLoggedIn, (req, res) => {
     var newResource = {
         name: req.body.name,
         image: req.body.image,
@@ -24,8 +24,8 @@ router.post("/",isLoggedIn, (req, res) => {
         author: req.body.author,
         description: req.body.description,
         addedBy: {
-                id: req.user._id,
-                username: req.user.username
+            id: req.user._id,
+            username: req.user.username
         },
     };
     Resource.create(newResource, (err, resource) => {
@@ -60,12 +60,36 @@ router.get("/:id", (req, res) => {
         }
     });
 });
+//EDIT RESOURCE ROUTE
+router.get('/:id/edit', (req, res) => {
+    Resource.findById(req.params.id, (err, resource) => {
+        if (err) {
+            console.log(err);
+        } else {
+            res.render("edit", {
+                resource
+            });
+        }
+    });
 
+});
+
+//UPDATE RESOURCE ROUTE
+router.put('/:id', (req, res) => {
+    Resource.findByIdAndUpdate(req.params.id, req.body.resource,
+        (err, resource) => {
+            if(err) {
+                res.redirect('/resources');
+            } else {
+                res.redirect('/resources/' + req.params.id);
+            }
+        });
+});
 //my middleware functions
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
+function isLoggedIn(req, res, next) {
+    if (req.isAuthenticated()) {
         return next();
-    } 
+    }
     res.redirect('/login');
 }
 module.exports = router;
