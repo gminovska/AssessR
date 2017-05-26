@@ -6870,3 +6870,9 @@ button.close {
 	max-width: 100%;
     margin-bottom: 10px;
 }
+
+/*my styles*/
+
+#delete-form {
+ display: inline-block;
+}
