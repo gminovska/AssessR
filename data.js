@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
+const passport = require('passport');
 const Resource = require("./models/resource");
 const Comment = require("./models/comment");
+const User = require('./models/user');
+const password = require('./config').password;
 
-var data = [
-    {
+var data = [{
         name: 'Web Developer Bootcamp',
         image: 'https://udemy-images.udemy.com/course/750x422/625204_436a_2.jpg',
         type: 'Course',
@@ -47,36 +49,66 @@ var data = [
     }
 ];
 
-function seedDB(){
-    //remove all resources
-    Resource.remove({}, (err)=>{
-        if(err){
+function seedDB() {
+
+    //remove all existing resources
+    Resource.remove({}, (err) => {
+        if (err) {
             console.log(err);
         }
         console.log("removed all resources!");
-        data.forEach((resource)=>{
-            Resource.create(resource,(err, resource)=>{
-                if(err){
-                    console.log(err);
-                }else {
-                    console.log("Added a resource");
-                    Comment.create({
-                        text: "This is a great resource, I learned a lot from it!",
-                        author: "Jill"
-                    }, (err, comment)=>{
-                        if(err){
-                            console.log(err)
-                        }else{
-                            resource.comments.push(comment);
-                            resource.save();
-                            console.log("Added new comment");
-                        }
-                    });
-                    
-                }
-            });
-        });
     });
+    //remove all comments
+    Comment.remove({}, (err, result)=>{
+        if(err) {
+            console.log(err);
+        } else {
+            console.log('Removed all comments');
+        }
+    });
+    //create a user
+    var seedUser = {};
+    User.register(new User({
+        username: 'assessr'
+    }), password, (err, user) => {
+        if (err) {
+            console.log(err);
+        } else {
+            //bind the newly created user id to a variable to be used in another functions
+            seedUser.id = user._id;
+            seedUser.username = user.username;
+            console.log('Created new user');
+
+            //create resouces that have that user associated with them
+            data.forEach((resource) => {
+                Resource.create(resource, (err, newResource) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        //associate the resource with the seedUser
+                        newResource.addedBy = seedUser;
+                        //create comment on each resource 
+                        Comment.create({
+                            text: "Great resource, I learned a lot from it!",
+                            author: seedUser
+                        }, (err, newComment) => {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                //push the comment into the resource array
+                                newResource.comments.push(newComment);
+                                newResource.save();
+                                console.log('Resource added');
+                            }
+                        });
+                    }
+                });
+            });
+        }
+    });
+
+
+
 }
 
 module.exports = seedDB;
