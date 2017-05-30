@@ -15,16 +15,18 @@
                     <p><%= description %></p>
                     <p>Added by <%=addedBy %></p>
                     <p>On <%= date %></p>
+                    <% if(user) { %>
                     <a href="/resources/<%= id %>/edit" class="btn btn-warning">Edit</a>
                     <form id="delete-form" action="/resources/<%= id %>/?_method=DELETE" method="POST">
                     <input class="btn btn-danger" type="submit" name="" value="Delete">    
                     </form>
+                    <% } %>
                 </div>
             </div>
             <div class="well">
-                <div class="text-right">
+                    <div class="text-right">
                     <a class="btn btn-success" href="/resources/<%= id %>/comments/new">Add New Comment</a>
-                </div>
+                </div>          
                 <hr>
                 <% comments.forEach(function(comment){ %>
                     <div class="row">

@@ -31,10 +31,7 @@ router.post("/", isLoggedIn, (req, res) => {
     Resource.create(newResource, (err, resource) => {
         if (err) {
             console.log("there was an error :(");
-        } else {
-            console.log("Resource added: ");
-            console.log(resource);
-        }
+        } 
     });
     res.redirect("/resources");
 });
@@ -49,6 +46,7 @@ router.get("/:id", (req, res) => {
             console.log(err);
         } else {
             res.render("show", {
+                user: req.user,
                 id: resource._id,
                 name: resource.name,
                 image: resource.image,
