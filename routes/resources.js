@@ -61,32 +61,15 @@ router.get("/:id", (req, res) => {
     });
 });
 //EDIT RESOURCE ROUTE
-router.get('/:id/edit', (req, res) => {
-    //is user logged in
-    if(req.isAuthenticated()) {
-        Resource.findById(req.params.id, (err, resource) => {
-        if (err) {
-            console.log(err);
+router.get('/:id/edit', checkResourceOwnership, (req, res) => {
+    Resource.findById(req.params.id, (err, resource)=>{
+        if(err) {
+            console.log(error);
         } else {
-            //does the user own the resource
-            //the equals is a method Mongoose provides. === wouldn't work because one is a string and the other is an ObjectID
-            if(resource.addedBy.id.equals(req.user._id)) {
-                res.render("edit", {
-                resource
-            });
-            } else {
-                res.send("No permission to delete the resource");
-            }
-            
+            res.render('edit', {resource});
         }
     });
-    } else {
-        res.send('You need to be logged in');
-    }
-        
-    //if not, redirect
     
-
 });
 
 //UPDATE RESOURCE ROUTE
@@ -117,5 +100,26 @@ function isLoggedIn(req, res, next) {
         return next();
     }
     res.redirect('/login');
+}
+
+function checkResourceOwnership(req, res, next) {
+    if(req.isAuthenticated()) {
+        Resource.findById(req.params.id, (err, resource) => {
+        if (err) {
+            res.redirect('back');
+        } else {
+            //does the user own the resource
+            //the equals is a method Mongoose provides. === wouldn't work because one is a string and the other is an ObjectID
+            if(resource.addedBy.id.equals(req.user._id)) {
+                next();
+            } else {
+                res.redirect('back');
+            }
+            
+        }
+    });
+    } else {
+        res.redirect('back');
+    }
 }
 module.exports = router;
