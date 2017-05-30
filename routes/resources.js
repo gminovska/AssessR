@@ -46,12 +46,11 @@ router.get("/:id", (req, res) => {
             console.log(err);
         } else {
             res.render("show", {
-                user: req.user,
                 id: resource._id,
                 name: resource.name,
                 image: resource.image,
                 description: resource.description,
-                addedBy: resource.addedBy.username,
+                addedBy: resource.addedBy,
                 date: dateFormat(resource.dateAdded, 'mmmm/dd/yyyy'),
                 comments: resource.comments
             });

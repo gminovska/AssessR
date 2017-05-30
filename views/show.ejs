@@ -13,9 +13,9 @@
                 <div class="caption-full col-sm-6">
                     
                     <p><%= description %></p>
-                    <p>Added by <%=addedBy %></p>
+                    <p>Added by <%=addedBy.username %></p>
                     <p>On <%= date %></p>
-                    <% if(user) { %>
+                    <% if(user && addedBy.id.equals(user._id)) { %>
                     <a href="/resources/<%= id %>/edit" class="btn btn-warning">Edit</a>
                     <form id="delete-form" action="/resources/<%= id %>/?_method=DELETE" method="POST">
                     <input class="btn btn-danger" type="submit" name="" value="Delete">    
