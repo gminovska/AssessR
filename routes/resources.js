@@ -62,15 +62,30 @@ router.get("/:id", (req, res) => {
 });
 //EDIT RESOURCE ROUTE
 router.get('/:id/edit', (req, res) => {
-    Resource.findById(req.params.id, (err, resource) => {
+    //is user logged in
+    if(req.isAuthenticated()) {
+        Resource.findById(req.params.id, (err, resource) => {
         if (err) {
             console.log(err);
         } else {
-            res.render("edit", {
+            //does the user own the resource
+            //the equals is a method Mongoose provides. === wouldn't work because one is a string and the other is an ObjectID
+            if(resource.addedBy.id.equals(req.user._id)) {
+                res.render("edit", {
                 resource
             });
+            } else {
+                res.send("No permission to delete the resource");
+            }
+            
         }
     });
+    } else {
+        res.send('You need to be logged in');
+    }
+        
+    //if not, redirect
+    
 
 });
 
