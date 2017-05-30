@@ -73,7 +73,7 @@ router.get('/:id/edit', checkResourceOwnership, (req, res) => {
 });
 
 //UPDATE RESOURCE ROUTE
-router.put('/:id', (req, res) => {
+router.put('/:id', checkResourceOwnership, (req, res) => {
     Resource.findByIdAndUpdate(req.params.id, req.body.resource,
         (err, resource) => {
             if(err) {
@@ -84,7 +84,7 @@ router.put('/:id', (req, res) => {
         });
 });
 //DELETE RESOURCE ROUTE
-router.delete('/:id', (req, res) =>{
+router.delete('/:id', checkResourceOwnership, (req, res) =>{
     Resource.findByIdAndRemove(req.params.id, (err, result) =>{
         if(err) {
             res.redirect('/resources');
