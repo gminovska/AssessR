@@ -37,6 +37,9 @@
                                 <%= comment.text %> 
                             </p>
                             <a href="/resources/<%=id %>/comments/<%= comment._id%>/edit" class="btn btn-xs btn-default">Edit</a>
+                            <form class="delete-form" action="/resources/<%= id %>/comments/<%= comment._id%>?_method=DELETE" method="POST">
+                    <input class="btn btn-xs btn-danger" type="submit" name="" value="Delete">    
+                    </form>
                         </div>
                     </div>
                 <% }) %>

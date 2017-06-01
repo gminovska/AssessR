@@ -68,6 +68,16 @@ router.put('/:comment_id', (req, res)=>{
             }
         })  
 });
+//DELETE COMMENT
+router.delete('/:comment_id', (req, res)=>{
+    Comment.findByIdAndRemove(req.params.comment_id, (err, result)=>{
+        if(err) {
+            res.send("ooops, something went wrong");
+        } else {
+            res.redirect(`/resources/${req.params.id}`);
+        }
+    })
+});
 //my middleware functions
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
