@@ -44,7 +44,7 @@ router.post('/', isLoggedIn, (req, res) => {
         }
     });
 });
-//EDIT COMMENT ROUTE
+//EDIT COMMENT 
 router.get('/:comment_id/edit', (req, res)=>{
     console.log(req.params);
     Comment.findById(req.params.comment_id, (err, comment)=>{
@@ -57,6 +57,16 @@ router.get('/:comment_id/edit', (req, res)=>{
             });
         }
     })
+});
+//UPDATE COMMENT
+router.put('/:comment_id', (req, res)=>{  
+        Comment.findByIdAndUpdate(req.params.comment_id, {text: req.body.comment}, (err, result)=>{
+            if(err) {
+                res.redirect(`/resources/${req.params.id}`);
+            } else {
+                res.redirect(`/resources/${req.params.id}`);
+            }
+        })  
 });
 //my middleware functions
 function isLoggedIn(req, res, next){
