@@ -44,7 +44,20 @@ router.post('/', isLoggedIn, (req, res) => {
         }
     });
 });
-
+//EDIT COMMENT ROUTE
+router.get('/:comment_id/edit', (req, res)=>{
+    console.log(req.params);
+    Comment.findById(req.params.comment_id, (err, comment)=>{
+        if(err) {
+            res.redirect('back');
+        } else {
+            res.render('comments/edit', {
+                resource_id: req.params.id,
+                comment
+            });
+        }
+    })
+});
 //my middleware functions
 function isLoggedIn(req, res, next){
     if(req.isAuthenticated()){
