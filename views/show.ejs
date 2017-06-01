@@ -17,7 +17,7 @@
                     <p>On <%= date %></p>
                     <% if(user && addedBy.id.equals(user._id)) { %>
                     <a href="/resources/<%= id %>/edit" class="btn btn-warning">Edit</a>
-                    <form id="delete-form" action="/resources/<%= id %>/?_method=DELETE" method="POST">
+                    <form class="delete-form" action="/resources/<%= id %>/?_method=DELETE" method="POST">
                     <input class="btn btn-danger" type="submit" name="" value="Delete">    
                     </form>
                     <% } %>

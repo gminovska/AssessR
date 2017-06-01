@@ -6873,6 +6873,6 @@ button.close {
 
 /*my styles*/
 
-#delete-form {
+.delete-form {
  display: inline-block;
 }
