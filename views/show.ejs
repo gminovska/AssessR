@@ -16,7 +16,7 @@
                     <p>Added by <%=addedBy.username %></p>
                     <p>On <%= date %></p>
                     <% if(user && addedBy.id.equals(user._id)) { %>
-                    <a href="/resources/<%= id %>/edit" class="btn btn-warning">Edit</a>
+                    <a href="/resources/<%= id %>/edit" class="btn btn-default">Edit</a>
                     <form class="delete-form" action="/resources/<%= id %>/?_method=DELETE" method="POST">
                     <input class="btn btn-danger" type="submit" name="" value="Delete">    
                     </form>
@@ -36,10 +36,12 @@
                             <p>
                                 <%= comment.text %> 
                             </p>
+                        <% if(user && comment.author.id.equals(user._id)) { %>
                             <a href="/resources/<%=id %>/comments/<%= comment._id%>/edit" class="btn btn-xs btn-default">Edit</a>
                             <form class="delete-form" action="/resources/<%= id %>/comments/<%= comment._id%>?_method=DELETE" method="POST">
                     <input class="btn btn-xs btn-danger" type="submit" name="" value="Delete">    
                     </form>
+                    <% } %>
                         </div>
                     </div>
                 <% }) %>

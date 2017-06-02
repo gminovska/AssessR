@@ -45,7 +45,7 @@ router.post('/', isLoggedIn, (req, res) => {
     });
 });
 //EDIT COMMENT 
-router.get('/:comment_id/edit', (req, res)=>{
+router.get('/:comment_id/edit', checkCommentOwnership, (req, res)=>{
     console.log(req.params);
     Comment.findById(req.params.comment_id, (err, comment)=>{
         if(err) {
@@ -59,7 +59,7 @@ router.get('/:comment_id/edit', (req, res)=>{
     })
 });
 //UPDATE COMMENT
-router.put('/:comment_id', (req, res)=>{  
+router.put('/:comment_id', checkCommentOwnership, (req, res)=>{  
         Comment.findByIdAndUpdate(req.params.comment_id, {text: req.body.comment}, (err, result)=>{
             if(err) {
                 res.redirect(`/resources/${req.params.id}`);
@@ -69,7 +69,7 @@ router.put('/:comment_id', (req, res)=>{
         })  
 });
 //DELETE COMMENT
-router.delete('/:comment_id', (req, res)=>{
+router.delete('/:comment_id',checkCommentOwnership, (req, res)=>{
     Comment.findByIdAndRemove(req.params.comment_id, (err, result)=>{
         if(err) {
             res.send("ooops, something went wrong");
@@ -84,5 +84,26 @@ function isLoggedIn(req, res, next){
         return next();
     } 
     res.redirect('/login');
+}
+
+function checkCommentOwnership(req, res, next) {
+    if(req.isAuthenticated()) {
+        Comment.findById(req.params.comment_id, (err, comment) => {
+        if (err) {
+            res.redirect('back');
+        } else {
+            //check if the logged in user wrote the comment
+            //the equals is a method Mongoose provides. === wouldn't work because one is a string and the other is an ObjectID
+            if(comment.author.id.equals(req.user._id)) {
+                next();
+            } else {
+                res.redirect('back');
+            }
+            
+        }
+    });
+    } else {
+        res.redirect('back');
+    }
 }
 module.exports = router;
