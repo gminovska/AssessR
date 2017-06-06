@@ -34,11 +34,13 @@ router.post('/', isLoggedIn, (req, res) => {
             };
             Comment.create(newComment, (err, comment) => {
                 if (err) {
-                    console.log(err);
+                    req.flash('error',"An error occured, please try again");
+                    res.redirect("/resources/" + resource._id);
                 } else {
                     //associate the comment with the resource
                     resource.comments.push(comment);
                     resource.save();
+                    req.flash('success',"Comment added");
                     res.redirect("/resources/" + resource._id);
                 }
             });
@@ -63,8 +65,10 @@ router.get('/:comment_id/edit', checkCommentOwnership, (req, res)=>{
 router.put('/:comment_id', checkCommentOwnership, (req, res)=>{  
         Comment.findByIdAndUpdate(req.params.comment_id, {text: req.body.comment}, (err, result)=>{
             if(err) {
+                req.flash('error',"Comment update failed, please try again");
                 res.redirect(`/resources/${req.params.id}`);
             } else {
+                req.flash('success',"Comment updated");
                 res.redirect(`/resources/${req.params.id}`);
             }
         })  
@@ -73,8 +77,10 @@ router.put('/:comment_id', checkCommentOwnership, (req, res)=>{
 router.delete('/:comment_id',checkCommentOwnership, (req, res)=>{
     Comment.findByIdAndRemove(req.params.comment_id, (err, result)=>{
         if(err) {
-            res.send("ooops, something went wrong");
+            req.flash('error',"Comment delete failed, please try again");
+            res.redirect(`/resources/${req.params.id}`);
         } else {
+            req.flash('success',"Comment deleted");
             res.redirect(`/resources/${req.params.id}`);
         }
     })
