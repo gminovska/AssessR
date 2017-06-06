@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router({mergeParams: true});
 const Resource = require("../models/resource");
 const Comment = require("../models/comment");
+const {isLoggedIn, checkCommentOwnership} = require("../middleware/index");
 //=====================
 //  COMMENTS ROUTES
 //=====================
@@ -78,32 +79,5 @@ router.delete('/:comment_id',checkCommentOwnership, (req, res)=>{
         }
     })
 });
-//my middleware functions
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    } 
-    res.redirect('/login');
-}
 
-function checkCommentOwnership(req, res, next) {
-    if(req.isAuthenticated()) {
-        Comment.findById(req.params.comment_id, (err, comment) => {
-        if (err) {
-            res.redirect('back');
-        } else {
-            //check if the logged in user wrote the comment
-            //the equals is a method Mongoose provides. === wouldn't work because one is a string and the other is an ObjectID
-            if(comment.author.id.equals(req.user._id)) {
-                next();
-            } else {
-                res.redirect('back');
-            }
-            
-        }
-    });
-    } else {
-        res.redirect('back');
-    }
-}
 module.exports = router;
