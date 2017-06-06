@@ -30,9 +30,11 @@ router.post("/", isLoggedIn, (req, res) => {
     };
     Resource.create(newResource, (err, resource) => {
         if (err) {
-            console.log("there was an error :(");
+            req.flash('error', "The resource was not added, please try again");
+            res.redirect("/resources");
         } 
     });
+    req.flash('success', "Resource added");
     res.redirect("/resources");
 });
 
@@ -43,7 +45,8 @@ router.get("/new", isLoggedIn, (req, res) => {
 router.get("/:id", (req, res) => {
     Resource.findById(req.params.id).populate("comments").exec((err, resource) => {
         if (err) {
-            console.log(err);
+            req.flash('error', "Couldn't find the resource, please try again");
+            res.redirect('/resources');
         } else {
             res.render("show", {
                 id: resource._id,
@@ -74,8 +77,10 @@ router.put('/:id', checkResourceOwnership, (req, res) => {
     Resource.findByIdAndUpdate(req.params.id, req.body.resource,
         (err, resource) => {
             if(err) {
+                req.flash('error', "There was an error updating the resource, please try again")
                 res.redirect('/resources');
             } else {
+                req.flash('success', "Resource successfully updated")
                 res.redirect('/resources/' + req.params.id);
             }
         });
@@ -86,6 +91,7 @@ router.delete('/:id', checkResourceOwnership, (req, res) =>{
         if(err) {
             res.redirect('/resources');
         } else {
+            req.flash('success', "Resource deleted");
             res.redirect('/resources');
         }
     });
