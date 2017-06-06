@@ -14,7 +14,8 @@ module.exports = {
                     if (comment.author.id.equals(req.user._id)) {
                         next();
                     } else {
-                        res.redirect('back');
+                        req.flash("error", "Authorization error: You cannot edit or delete other user's comment");
+                        res.redirect('/resources/' + req.params.id);
                     }
 
                 }
@@ -28,6 +29,7 @@ module.exports = {
         if (req.isAuthenticated()) {
             Resource.findById(req.params.id, (err, resource) => {
                 if (err) {
+                    req.flash("error", "There was an error finding the resource, please try again")
                     res.redirect('back');
                 } else {
                     //does the user own the resource
@@ -35,12 +37,14 @@ module.exports = {
                     if (resource.addedBy.id.equals(req.user._id)) {
                         next();
                     } else {
-                        res.redirect('back');
+                        req.flash("error", "Authorization error: You cannot edit or delete a resource you did not add");
+                        res.redirect('/resources/' + req.params.id);
                     }
 
                 }
             });
         } else {
+            req.flash('error', "Please log in first")
             res.redirect('back');
         }
     },
@@ -49,6 +53,7 @@ module.exports = {
         if (req.isAuthenticated()) {
             return next();
         }
+        req.flash("error", "Please log in first");
         res.redirect('/login');
     }
 }
