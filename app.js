@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const methodOverride = require('method-override');
+const flash = require('connect-flash');
 // const seedDB = require('./data');
 //import models
 const Resource = require("./models/resource");
@@ -27,6 +28,7 @@ app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({
     extended: true
 }));
+app.use(flash());
 // PASSPORT CONFIGURATION
 app.use(require('express-session')({
     secret: "The earth is flat",
@@ -41,6 +43,8 @@ passport.deserializeUser(User.deserializeUser());
 //make the user object globally available
 app.use(function(req, res, next){
     res.locals.user = req.user;
+    res.locals.error = req.flash('error');
+    res.locals.success = req.flash('success');
     next();
 });
 
