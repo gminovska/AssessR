@@ -21,7 +21,7 @@ const indexRoutes = require('./routes/index');
 // mongoose.connect('mongodb://localhost:27017/assessr');
 // seedDB();
 //connect to mlab(production) database
-mongoose.connect('mongodb://admin:as2es2r@ds119682.mlab.com:19682/assessr')
+mongoose.connect('mongodb://admin:as2es2r@ds119682.mlab.com:19682/assessr');
 app.set("view engine", "ejs");
 //serve static files
 app.use(express.static(__dirname + "/public"));
