@@ -17,10 +17,11 @@ const resourceRoutes = require('./routes/resources');
 const commentRoutes = require('./routes/comments');
 const indexRoutes = require('./routes/index');
 
-//connect to the database
-mongoose.connect('mongodb://localhost:27017/assessr');
+//connect to the local(dev) database
+// mongoose.connect('mongodb://localhost:27017/assessr');
 // seedDB();
-//middleware
+//connect to mlab(production) database
+mongoose.connect('mongodb://admin:as2es2r@ds119682.mlab.com:19682/assessr')
 app.set("view engine", "ejs");
 //serve static files
 app.use(express.static(__dirname + "/public"));
