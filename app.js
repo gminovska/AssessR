@@ -54,5 +54,5 @@ app.use('/resources', resourceRoutes);
 app.use('/resources/:id/comments', commentRoutes);
 
 
-app.listen(3000 || process.env.PORT, () => console.log("AssessR is up and running"));
+app.listen(process.env.PORT, process.env.IP, () => console.log("AssessR is up and running"));
 
