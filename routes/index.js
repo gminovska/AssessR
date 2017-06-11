@@ -40,7 +40,8 @@ router.get('/login', function (req, res) {
 //handle login logic
 router.post('/login', passport.authenticate('local', {
     successRedirect: '/resources',
-    failureRedirect: '/login'
+    failureRedirect: '/login',
+    failureFlash: true
 }), function (req, res) {});
 
 //logout route
